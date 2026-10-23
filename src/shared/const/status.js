@@ -1,0 +1,76 @@
+export const STATUS = {
+  cancelled: "cancelled",
+  new: "new",
+  active: "active",
+  add_driver: "add_driver",
+  start_driver: "start_driver",
+  start_loading: "start_loading",
+  verification_loading: "verification_loading",
+  start_unloading: "start_unloading",
+  verification_unloading: "verification_unloading",
+  finished: "finished",
+  deleted: "deleted",
+  closed: "closed",
+  verified_participant: "verified_participant",
+  await_paid: "await_paid",
+  winning: "winning",
+  loss: "loss",
+  approved: "approved",
+  emergency_situation: "emergency_situation",
+  finished_emergency_situation: "finished_emergency_situation",
+  sign_avr: "sign_avr",
+};
+
+export const FINISHED_LEAD_STATUSES = [
+  STATUS.finished,
+  STATUS.deleted,
+  STATUS.finished_emergency_situation,
+];
+
+export const NEW_LEAD_STATUS = [STATUS.new, STATUS.add_driver];
+
+export const IN_PROGRESS_STATUSES = [
+  STATUS.start_driver,
+  STATUS.start_loading,
+  STATUS.start_unloading,
+  STATUS.verification_loading,
+  STATUS.verification_unloading,
+];
+
+export const WAYPOINT_TYPES = {
+  loading: "loading",
+  unloading: "unloading",
+  check_passes: "check_passes",
+};
+
+export const LEAD_STATUS_OPTIONS = [
+  { label: "Новый", value: "new" },
+  { label: "Водитель добавлен", value: "add_driver" },
+  { label: "Поездка начата", value: "start_driver" },
+  { label: "Погрузка", value: "start_loading" },
+  { label: "Погрузка подтверждена", value: "verification_loading" },
+  { label: "Разгрузка", value: "start_unloading" },
+  { label: "Разгрузка подтверждена", value: "verification_unloading" },
+  { label: "Рейс завершен", value: "finished" },
+  { label: "Рейс удален", value: "deleted" },
+];
+
+export const ACTIVE_LEAD_STATUS_OPTIONS = [
+  { label: "Новый", value: "new" },
+  { label: "Водитель добавлен", value: "add_driver" },
+  { label: "Поездка начата", value: "start_driver" },
+  { label: "Погрузка", value: "start_loading" },
+  { label: "Погрузка подтверждена", value: "verification_loading" },
+  { label: "Разгрузка", value: "start_unloading" },
+  { label: "Разгрузка подтверждена", value: "verification_unloading" },
+  { label: "Aварийная ситуация", value: "emergency_situation" },
+];
+
+export const HISTORY_LEAD_STATUS_OPTIONS = [
+  { label: "Рейс завершен", value: "finished" },
+  { label: "Рейс удален", value: "deleted" },
+  {
+    label: "Aварийная ситуация закрыта",
+    value: "finished_emergency_situation",
+  },
+];
