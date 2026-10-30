@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Box, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
@@ -7,10 +8,10 @@ import { transportationParameters } from "../../shared/const/transportation-para
 import { moneySpacingFormat } from "../../shared/helpers/money-spacinf-format";
 
 const prices = [
-  { name: "price", label: "Цена заказчика", color: "primary" },
+  { name: "price", label: "lead.customerPrice", color: "primary" },
   {
     name: "transportation_price",
-    label: "Ваша цена за перевозку",
+    label: "lead.yourPrice",
     color: "success",
   },
 ];
@@ -19,10 +20,11 @@ export default function LeadTransportationInfo({
   leadData,
   hidePrices = false,
 }) {
+  const { t } = useTranslation();
   return (
     <Section
       title={
-        hidePrices ? "Параметры перевозки" : "Стоимость и параметры перевозки"
+        hidePrices ? t("lead.parameters") : t("lead.priceAndParameters")
       }
       icon={<PaymentsOutlinedIcon color="primary" />}
     >
@@ -57,7 +59,7 @@ export default function LeadTransportationInfo({
                 <Typography
                   sx={{ fontSize: 13, color: "text.secondary", mb: 1 }}
                 >
-                  {label}
+                  {t(label)}
                 </Typography>
                 <Box
                   sx={{
@@ -76,7 +78,7 @@ export default function LeadTransportationInfo({
                       lineHeight: 1.2,
                     }}
                   >
-                    {hasPrice ? moneySpacingFormat(value) : "Не указана"}
+                    {hasPrice ? moneySpacingFormat(value) : t("common.notSpecifiedFemale")}
                   </Typography>
                   {hasPrice && leadData?.currency && (
                     <Typography
@@ -110,15 +112,15 @@ export default function LeadTransportationInfo({
         {transportationParameters.map(({ name, label }) => (
           <InfoItem
             key={name}
-            label={label}
-            value={leadData?.[name]?.name || leadData?.[name] || "Не указан"}
+            label={t(label)}
+            value={leadData?.[name]?.name || leadData?.[name] || t("common.notSpecifiedMale")}
           />
         ))}
         {leadData?.grace_period_days != null &&
           String(leadData.grace_period_days).trim() !== "" && (
             <InfoItem
-              label="Доступная отсрочка"
-              value={`${leadData.grace_period_days} дн.`}
+              label={t("lead.gracePeriod")}
+              value={t("lead.days", { value: leadData.grace_period_days })}
             />
           )}
       </Box>

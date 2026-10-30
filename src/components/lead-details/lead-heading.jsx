@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Box, Stack, Typography } from "@mui/material";
 import RenderStatus from "../../shared/ui/render-status";
 
 const LeadHeading = ({ leadData }) => {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -22,10 +24,10 @@ const LeadHeading = ({ leadData }) => {
             color: "font_color.heading",
           }}
         >
-          Перевозка #{leadData.num || "—"}
+          {t("lead.number", { value: leadData.num || "—" })}
         </Typography>
         <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
-          Маршрут, участники и документы заявки
+          {t("lead.subtitle")}
         </Typography>
       </Stack>
       <Box

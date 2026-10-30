@@ -1,5 +1,7 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import NotificationsBlock from "./notifications/notifications-block";
+import { LanguageSwitcher } from "./language-switcher";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -35,19 +37,19 @@ const HEADER_HEIGHT = 64;
 
 const menuItems = [
   {
-    label: "Главная",
+    label: "nav.home",
     to: "/",
     icon: <HomeOutlinedIcon fontSize="small" />,
-    tooltip_text: "Главная страница",
+    tooltip_text: "nav.homePage",
   },
   {
-    label: "Перевозки",
+    label: "nav.leads",
     to: "/leads",
     icon: <LocalShippingOutlinedIcon fontSize="small" />,
     tooltip_text: "",
   },
   {
-    label: "Грузовладельцы/Дистрибьюторы",
+    label: "nav.partnersMenu",
     to: "/distributors",
     icon: <GroupsOutlinedIcon fontSize="small" />,
     tooltip_text: "",
@@ -55,6 +57,7 @@ const menuItems = [
 ];
 
 function MenuLinkItem({ to, label, icon, tooltip_text, closeSideMenu }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -63,7 +66,7 @@ function MenuLinkItem({ to, label, icon, tooltip_text, closeSideMenu }) {
       selected={
         pathname === to || (to !== "/" && pathname.startsWith(`${to}/`))
       }
-      title={tooltip_text}
+      title={tooltip_text ? t(tooltip_text) : undefined}
       onClick={() => {
         navigate(to);
         closeSideMenu();
@@ -77,12 +80,13 @@ function MenuLinkItem({ to, label, icon, tooltip_text, closeSideMenu }) {
       <ListItemIcon sx={{ minWidth: 32, color: "inherit" }}>
         {icon}
       </ListItemIcon>
-      <ListItemText primary={label} />
+      <ListItemText primary={t(label)} />
     </ListItemButton>
   );
 }
 
 export function Header() {
+  const { t } = useTranslation();
   const profile = useSyncExternalStore(subscribeProfile, getProfileSnapshot);
 
   useEffect(() => {
@@ -118,7 +122,7 @@ export function Header() {
   const navigate = useNavigate();
 
   const isProfileMenuOpen = Boolean(profileAnchorEl);
-  const userEmail = profile?.email || email || "Пользователь";
+  const userEmail = profile?.email || email || t("auth.user");
 
   const logoSrc = window.APP_DATA?.logo_url || logo;
 
@@ -166,7 +170,7 @@ export function Header() {
       window.location.replace("/login");
     } catch (error) {
       setLogoutError(
-        error.message || "Не удалось выйти из аккаунта. Попробуйте ещё раз.",
+        error.message || "errors.logout",
       );
       setIsLogoutLoading(false);
     }
@@ -179,7 +183,7 @@ export function Header() {
         position: "fixed",
         display: "flex",
         justifyContent: "space-around",
-        px: 3,
+        px: { xs: 1, sm: 3 },
         top: 0,
         left: 0,
         right: 0,
@@ -199,8 +203,8 @@ export function Header() {
         }}
       >
         <IconButton
-          title={isBurgerOpen ? "Закрыть меню" : "Открыть меню"}
-          aria-label={isBurgerOpen ? "Закрыть меню" : "Открыть меню"}
+          title={isBurgerOpen ? t("nav.closeMenu") : t("nav.openMenu")}
+          aria-label={isBurgerOpen ? t("nav.closeMenu") : t("nav.openMenu")}
           onClick={toggleBurgerMenu}
           sx={{
             transition: "0.2s",
@@ -219,6 +223,7 @@ export function Header() {
             height: { xs: 28, sm: 32 },
             width: "auto",
             maxWidth: { xs: 130, sm: 170 },
+            "@media (max-width: 359px)": { maxWidth: 90 },
             objectFit: "contain",
             display: "block",
             flexShrink: 0,
@@ -237,13 +242,14 @@ export function Header() {
           ml: "auto",
         }}
       >
+        <LanguageSwitcher />
         <NotificationsBlock />
 
         <Button
           variant="outlined"
           onClick={handleOpenProfileMenu}
           title={userEmail}
-          aria-label={`Профиль пользователя ${userEmail}`}
+          aria-label={t("auth.userProfile", { value: userEmail })}
           sx={{
             minWidth: 0,
             maxWidth: { xs: 140, sm: 220, md: 280 },
@@ -265,7 +271,7 @@ export function Header() {
         >
           <Avatar
             src={profile?.avatar || undefined}
-            alt="Фото профиля"
+            alt={t("profile.photo")}
             sx={{
               width: { xs: 24, sm: 28 },
               height: { xs: 24, sm: 28 },
@@ -332,9 +338,9 @@ export function Header() {
           }}
         >
           <IconButton
-            title="Закрыть меню"
+            title={t("nav.closeMenu")}
             onClick={toggleBurgerMenu}
-            aria-label="Закрыть меню"
+            aria-label={t("nav.closeMenu")}
           >
             <CloseIcon />
           </IconButton>
@@ -356,30 +362,30 @@ export function Header() {
         open={isProfileMenuOpen}
         onClose={handleCloseProfileMenu}
       >
-        <MenuItem onClick={() => handleNavigate("/profile")}>Профиль</MenuItem>
+        <MenuItem onClick={() => handleNavigate("/profile")}>{t("nav.profile")}</MenuItem>
 
         <MenuItem disabled>
-          Настройки
+          {t("nav.settings")}
         </MenuItem>
 
-        <MenuItem onClick={handleOpenLogoutModal}>Выход</MenuItem>
+        <MenuItem onClick={handleOpenLogoutModal}>{t("auth.logout")}</MenuItem>
       </Menu>
 
       <Dialog open={isLogoutModalOpen} onClose={handleCloseLogoutModal}>
-        <DialogTitle>Выход из аккаунта</DialogTitle>
+        <DialogTitle>{t("auth.logoutTitle")}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Вы уверены, что хотите выйти?</DialogContentText>
+          <DialogContentText>{t("auth.confirmLogout")}</DialogContentText>
           {logoutError && (
             <Alert severity="error" sx={{ mt: 2 }}>
-              {logoutError}
+              {t(logoutError)}
             </Alert>
           )}
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseLogoutModal} disabled={isLogoutLoading}>
-            Отмена
+            {t("common.cancel")}
           </Button>
 
           <Button
@@ -388,7 +394,7 @@ export function Header() {
             onClick={handleConfirmLogout}
             disabled={isLogoutLoading}
           >
-            {isLogoutLoading ? "Выход…" : "Выйти"}
+            {isLogoutLoading ? t("auth.loggingOut") : t("auth.logoutAction")}
           </Button>
         </DialogActions>
       </Dialog>

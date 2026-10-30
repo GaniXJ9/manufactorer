@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Alert, Box, Button, Chip, Typography } from "@mui/material";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { useNotificationsContext } from "../../../app/context/notifications/use-notifications-context";
@@ -11,6 +12,7 @@ const NotificationsList = ({
   handleNotificationsClose,
   handleOpenDrawer,
 }) => {
+  const { t } = useTranslation();
   const isLoading = useNotificationsContext().isLoading;
   const error = useNotificationsContext().error;
   return (
@@ -28,7 +30,7 @@ const NotificationsList = ({
           <Typography
             sx={{ fontSize: 18, fontWeight: 600, color: "font_color.heading" }}
           >
-            Уведомления
+            {t("notifications.title")}
           </Typography>
           {notViewedCount > 0 && (
             <Chip
@@ -40,13 +42,13 @@ const NotificationsList = ({
           )}
         </Box>
         <Typography sx={{ mt: 0.75, fontSize: 13, color: "text.secondary" }}>
-          Последние события по перевозкам и аукционам
+          {t("notifications.recent")}
         </Typography>
       </Box>
       <Box sx={{ overflowY: "auto", minHeight: 0 }}>
         {error ? (
           <Alert severity="error" sx={{ m: 2 }}>
-            Не удалось загрузить уведомления. Попробуйте открыть список ещё раз.
+            {t("notifications.loadError")}
           </Alert>
         ) : isLoading || !notifications.length ? (
           <NotificationState loading={isLoading} />
@@ -70,7 +72,7 @@ const NotificationsList = ({
           endIcon={<ArrowForwardRoundedIcon />}
           sx={{ textTransform: "none", borderRadius: "16px", py: 1 }}
         >
-          Все уведомления
+          {t("notifications.all")}
         </Button>
       </Box>
     </Box>

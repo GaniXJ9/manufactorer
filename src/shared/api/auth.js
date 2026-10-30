@@ -16,6 +16,6 @@ export async function logout() {
 
   if (!response.ok) {
     const data = await response.json().catch(() => null);
-    throw new Error(data?.message || "Не удалось выйти из аккаунта. Попробуйте ещё раз.");
+    throw new Error(data?.message || "errors.logout");
   }
 }

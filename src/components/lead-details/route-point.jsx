@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Box, Chip, Typography } from "@mui/material";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { getLocale } from "../../i18n/languages";
 import dayjs from "dayjs";
 import StraightOutlinedIcon from "@mui/icons-material/StraightOutlined";
 import RenderType from "./render-type";
@@ -16,6 +18,8 @@ const RoutePoint = ({
   isPassed,
   type,
 }) => {
+  const { t, i18n } = useTranslation();
+  const locale = getLocale(i18n.resolvedLanguage);
   return (
     <Box
       sx={{
@@ -118,7 +122,7 @@ const RoutePoint = ({
             overflowWrap: "anywhere",
           }}
         >
-          {address || "Адрес не указан"}
+          {address || t("lead.noAddress")}
         </Typography>
       </Box>
       {(date?.start_at || date?.end_at) && (
@@ -138,7 +142,7 @@ const RoutePoint = ({
                 color: "text.secondary",
               }}
             >
-              Дата начала:{" "}
+              {t("lead.startDate")}{" "}
               <Box
                 component="span"
                 sx={{
@@ -146,7 +150,7 @@ const RoutePoint = ({
                   fontWeight: 500,
                 }}
               >
-                {dayjs(date.start_at).format("DD.MM.YYYY")}
+                {dayjs(date.start_at).toDate().toLocaleDateString(locale)}
               </Box>
             </Typography>
           )}
@@ -159,7 +163,7 @@ const RoutePoint = ({
                 color: "text.secondary",
               }}
             >
-              Дата окончания:{" "}
+              {t("lead.endDate")}{" "}
               <Box
                 component="span"
                 sx={{
@@ -167,7 +171,7 @@ const RoutePoint = ({
                   fontWeight: 500,
                 }}
               >
-                {dayjs(date.end_at).format("DD.MM.YYYY, HH:mm")}
+                {dayjs(date.end_at).toDate().toLocaleString(locale, { dateStyle: "short", timeStyle: "short" })}
               </Box>
             </Typography>
           )}

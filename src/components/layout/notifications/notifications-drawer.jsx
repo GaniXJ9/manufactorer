@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import TooltipIconButton from "../../../shared/ui/tooltip-icon-button";
 import {
   Alert,
@@ -20,6 +21,7 @@ const NotificationsDrawer = ({
   setSelectedNotification,
   handleNotificationsClose,
 }) => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const {
     total,
@@ -77,18 +79,18 @@ const NotificationsDrawer = ({
           <Typography
             sx={{ fontSize: 22, fontWeight: 600, color: "font_color.heading" }}
           >
-            Уведомления
+            {t("notifications.title")}
           </Typography>
           <TooltipIconButton
-            title="Закрыть уведомления"
-            aria-label="Закрыть уведомления"
+            title={t("notifications.close")}
+            aria-label={t("notifications.close")}
             onClick={handleCloseDrawer}
           >
             <CloseRoundedIcon />
           </TooltipIconButton>
         </Box>
         <Typography sx={{ mt: 0.5, fontSize: 13, color: "text.secondary" }}>
-          Все события по вашим перевозкам и аукционам
+          {t("notifications.subtitle")}
         </Typography>
         <Button
           onClick={handleReadAll}
@@ -96,13 +98,13 @@ const NotificationsDrawer = ({
           startIcon={<DoneAllRoundedIcon />}
           sx={{ mt: 2, textTransform: "none", borderRadius: "16px" }}
         >
-          Отметить все прочитанными
+          {t("notifications.markAllRead")}
         </Button>
       </Box>
       <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
         {error ? (
           <Alert severity="error" sx={{ m: 2 }}>
-            Не удалось выполнить действие. Попробуйте ещё раз.
+            {t("errors.action")}
           </Alert>
         ) : isLoading || !notifications.length ? (
           <NotificationState loading={isLoading} />

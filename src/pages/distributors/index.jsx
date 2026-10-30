@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Box, Button, Chip, CircularProgress, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
 import RootLayout from "../../components/layout/root-layout";
@@ -5,8 +6,10 @@ import { PageHeading } from "../../components/layout/page-heading";
 import CustomerCard from "../../components/customers/customer-card";
 import { useCustomersContext } from "../../app/context/customers/use-customers-context";
 import { searchCustomers } from "../../shared/api/customers";
+import { getLocale } from "../../i18n/languages";
 
 const Distributors = () => {
+  const { t, i18n } = useTranslation();
   const [retryKey, setRetryKey] = useState(0);
   const { customers, loading, error, fetchCustomers, attach, detach,
     requests, requestsLoading, requestsError, fetchRequests, approve, reject } = useCustomersContext();
@@ -38,11 +41,11 @@ const Distributors = () => {
       const { data } = await searchCustomers(query, controller.signal);
       if (controller.signal.aborted) return;
       const items = Array.isArray(data) ? data : data.items ?? data.customers;
-      if (!Array.isArray(items)) throw new Error("Не удалось прочитать результаты поиска");
+      if (!Array.isArray(items)) throw new Error("partners.searchReadError");
       setResults(items);
     } catch (error) {
       if (!controller.signal.aborted) {
-        setSearchError(error.response?.data?.message || error.message || "Не удалось найти заказчиков");
+        setSearchError(error.response?.data?.message || error.message || "partners.searchError");
       }
     } finally {
       if (!controller.signal.aborted) setSearchLoading(false);
@@ -56,16 +59,16 @@ const Distributors = () => {
     setNotice(null);
     try {
       const actions = {
-        attach: { run: attach, message: "Заявка отправлена заказчику" },
-        detach: { run: detach, message: "Заказчик отвязан" },
-        withdraw: { run: detach, message: "Заявка отозвана" },
-        approve: { run: approve, message: "Заявка одобрена, заказчик добавлен в список моих" },
-        reject: { run: reject, message: "Заявка отклонена" },
+        attach: { run: attach, message: "partners.sentNotice" },
+        detach: { run: detach, message: "partners.detachedNotice" },
+        withdraw: { run: detach, message: "partners.withdrawnNotice" },
+        approve: { run: approve, message: "partners.approvedNotice" },
+        reject: { run: reject, message: "partners.rejectedNotice" },
       };
       await actions[action].run(customer);
       setNotice({ severity: "success", message: actions[action].message });
     } catch (error) {
-      setNotice({ severity: "error", message: error.response?.data?.message || "Не удалось выполнить действие. Попробуйте ещё раз." });
+      setNotice({ severity: "error", message: error.response?.data?.message || "errors.action" });
     } finally {
       actionPending.current = false;
       setPendingId(null);
@@ -87,48 +90,48 @@ const Distributors = () => {
   return (
     <RootLayout>
       <PageHeading
-        title="Грузовладельцы и дистрибьюторы"
-        subtitle="Список и управление партнёрами"
+        title={t("nav.partners")}
+        subtitle={t("partners.subtitle")}
       />
       <Box sx={{ maxWidth: 700, mx: "auto", my: 3 }}>
         <Tabs
           value={tab}
           onChange={(_, value) => setTab(value)}
-          aria-label="Грузовладельцы"
+          aria-label={t("partners.cargoOwners")}
           variant="scrollable"
           scrollButtons="auto"
           sx={{ mb: 3, borderBottom: 1, borderColor: "divider" }}
         >
           <Tab
             value="mine"
-            label="Мои грузовладельцы"
+            label={t("partners.mine")}
             id="my-customers-tab"
             aria-controls="my-customers-panel"
           />
-          <Tab value="search" label="Поиск грузовладельцев" id="search-customers-tab" aria-controls="search-customers-panel" />
-          <Tab value="requests" label="Заявки на связь" id="customer-requests-tab" aria-controls="customer-requests-panel" />
+          <Tab value="search" label={t("partners.searchTab")} id="search-customers-tab" aria-controls="search-customers-panel" />
+          <Tab value="requests" label={t("partners.requests")} id="customer-requests-tab" aria-controls="customer-requests-panel" />
         </Tabs>
 
-        {notice && <Alert severity={notice.severity} onClose={() => setNotice(null)} sx={{ mb: 2 }}>{notice.message}</Alert>}
+        {notice && <Alert severity={notice.severity} onClose={() => setNotice(null)} sx={{ mb: 2 }}>{t(notice.message)}</Alert>}
 
         <Box role="tabpanel" id="my-customers-panel" aria-labelledby="my-customers-tab" hidden={tab !== "mine"}>
-          {loading && <CircularProgress aria-label="Загрузка заказчиков" />}
+          {loading && <CircularProgress aria-label={t("partners.loading")} />}
           {!loading && error && (
             <Alert
               severity="error"
-              action={<Button color="inherit" onClick={() => setRetryKey((value) => value + 1)}>Повторить</Button>}
+              action={<Button color="inherit" onClick={() => setRetryKey((value) => value + 1)}>{t("common.retry")}</Button>}
             >
-              {error}
+              {t(error)}
             </Alert>
           )}
-          {!loading && !error && customers.length === 0 && <Alert severity="info">Список пуст</Alert>}
+          {!loading && !error && customers.length === 0 && <Alert severity="info">{t("common.empty")}</Alert>}
           {!loading && !error && (
             <Stack spacing={2}>
               {customers.map((customer) => (
                 <CustomerCard
                   key={customer.id || customer._id}
                   customer={customer}
-                  actionLabel="Отвязать"
+                  actionLabel={t("partners.detach")}
                   actionColor="error"
                   actionDisabled={pendingId !== null || !(customer.id || customer._id)}
                   actionLoading={pendingId === (customer.id || customer._id)}
@@ -141,20 +144,20 @@ const Distributors = () => {
         <Box role="tabpanel" id="search-customers-panel" aria-labelledby="search-customers-tab" hidden={tab !== "search"}>
           <Box component="form" onSubmit={handleSearch} sx={{ display: "flex", gap: 1, mb: 3 }}>
             <TextField
-              label="Поиск заказчика"
-              placeholder="Например, Торг"
+              label={t("partners.search")}
+              placeholder={t("partners.searchExample")}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               size="small"
               fullWidth
             />
-            <Button type="submit" variant="contained" disabled={!query.trim() || searchLoading}>Найти</Button>
+            <Button type="submit" variant="contained" disabled={!query.trim() || searchLoading}>{t("partners.find")}</Button>
           </Box>
-          {searchLoading && <CircularProgress aria-label="Поиск заказчиков" />}
-          {searchError && <Alert severity="error">{searchError}</Alert>}
-          {!hasSearched && <Alert severity="info">Введите название заказчика и нажмите «Найти»</Alert>}
-          {requestsError && <Alert severity="error" sx={{ mb: 2 }} action={<Button color="inherit" onClick={() => setRequestsRetryKey((value) => value + 1)}>Повторить</Button>}>{requestsError}</Alert>}
-          {hasSearched && !searchLoading && !searchError && results.length === 0 && <Alert severity="info">Заказчики не найдены</Alert>}
+          {searchLoading && <CircularProgress aria-label={t("partners.searching")} />}
+          {searchError && <Alert severity="error">{t(searchError)}</Alert>}
+          {!hasSearched && <Alert severity="info">{t("partners.searchHint")}</Alert>}
+          {requestsError && <Alert severity="error" sx={{ mb: 2 }} action={<Button color="inherit" onClick={() => setRequestsRetryKey((value) => value + 1)}>{t("common.retry")}</Button>}>{t(requestsError)}</Alert>}
+          {hasSearched && !searchLoading && !searchError && results.length === 0 && <Alert severity="info">{t("partners.notFound")}</Alert>}
           {!searchLoading && !searchError && (
             <Stack spacing={2}>
               {results.map((customer) => {
@@ -165,7 +168,7 @@ const Distributors = () => {
                   <CustomerCard
                     key={id}
                     customer={customer}
-                    actionLabel={attached ? "Уже привязан" : request ? (request.direction === "incoming" ? "Есть входящая заявка" : "Заявка отправлена") : "Подать заявку"}
+                    actionLabel={attached ? t("partners.attached") : request ? (request.direction === "incoming" ? t("partners.incomingExists") : t("partners.sent")) : t("partners.request")}
                     actionDisabled={attached || Boolean(request) || loading || requestsLoading || Boolean(error) || Boolean(requestsError) || pendingId !== null || !id}
                     actionLoading={pendingId === id}
                     onAction={(item) => handleAction(item, "attach")}
@@ -176,24 +179,24 @@ const Distributors = () => {
           )}
         </Box>
         <Box role="tabpanel" id="customer-requests-panel" aria-labelledby="customer-requests-tab" hidden={tab !== "requests"}>
-          {requestsLoading && <CircularProgress aria-label="Загрузка заявок на связь" />}
+          {requestsLoading && <CircularProgress aria-label={t("partners.loadingRequests")} />}
           {!requestsLoading && requestsError && (
-            <Alert severity="error" action={<Button color="inherit" onClick={() => setRequestsRetryKey((value) => value + 1)}>Повторить</Button>}>
-              {requestsError}
+            <Alert severity="error" action={<Button color="inherit" onClick={() => setRequestsRetryKey((value) => value + 1)}>{t("common.retry")}</Button>}>
+              {t(requestsError)}
             </Alert>
           )}
-          {!requestsLoading && !requestsError && requests.length === 0 && <Alert severity="info">Заявок на связь пока нет</Alert>}
+          {!requestsLoading && !requestsError && requests.length === 0 && <Alert severity="info">{t("partners.noRequests")}</Alert>}
           {!requestsLoading && !requestsError && requests.length > 0 && (
             <Stack spacing={3}>
               {[
-                { direction: "incoming", title: "Входящие — от заказчиков" },
-                { direction: "outgoing", title: "Исходящие — ваши заявки" },
+                { direction: "incoming", title: t("partners.incoming") },
+                { direction: "outgoing", title: t("partners.outgoing") },
               ].map(({ direction, title }) => {
                 const items = requests.filter((item) => item.direction === direction);
                 return (
                   <Stack key={direction} spacing={2}>
                     <Typography component="h2" variant="h6">{title}</Typography>
-                    {items.length === 0 && <Typography color="text.secondary">Заявок нет</Typography>}
+                    {items.length === 0 && <Typography color="text.secondary">{t("partners.emptyRequests")}</Typography>}
                     {items.map((customer) => {
                       const id = customer.id || customer._id;
                       const busy = pendingId === id;
@@ -202,20 +205,20 @@ const Distributors = () => {
                       return (
                         <CustomerCard key={id} customer={customer}>
                           <Stack spacing={2}>
-                            <Box><Chip size="small" color={direction === "incoming" ? "primary" : "default"} label={direction === "incoming" ? "Входящая заявка" : "Ожидает одобрения заказчика"} /></Box>
+                            <Box><Chip size="small" color={direction === "incoming" ? "primary" : "default"} label={direction === "incoming" ? t("partners.incomingRequest") : t("partners.awaitingApproval")} /></Box>
                             {date && !Number.isNaN(date.getTime()) && (
                               <Typography variant="body2" color="text.secondary">
-                                Дата заявки: {date.toLocaleString("ru-RU", { timeZone: "Asia/Qyzylorda", dateStyle: "medium", timeStyle: "short" })}
+                                {t("partners.requestDate")}{" "}{date.toLocaleString(getLocale(i18n.resolvedLanguage), { timeZone: "Asia/Qyzylorda", dateStyle: "medium", timeStyle: "short" })}
                               </Typography>
                             )}
                             <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
                               {direction === "incoming" ? (
                                 <>
-                                  <Button variant="contained" disabled={disabled} onClick={() => handleAction(customer, "approve")}>{busy ? "Подождите…" : "Одобрить"}</Button>
-                                  <Button variant="outlined" color="error" disabled={disabled} onClick={() => handleAction(customer, "reject")}>Отклонить</Button>
+                                  <Button variant="contained" disabled={disabled} onClick={() => handleAction(customer, "approve")}>{busy ? t("common.wait") : t("partners.approve")}</Button>
+                                  <Button variant="outlined" color="error" disabled={disabled} onClick={() => handleAction(customer, "reject")}>{t("partners.reject")}</Button>
                                 </>
                               ) : (
-                                <Button variant="outlined" color="error" disabled={disabled} onClick={() => handleAction(customer, "withdraw")}>{busy ? "Подождите…" : "Отозвать заявку"}</Button>
+                                <Button variant="outlined" color="error" disabled={disabled} onClick={() => handleAction(customer, "withdraw")}>{busy ? t("common.wait") : t("partners.withdraw")}</Button>
                               )}
                             </Stack>
                           </Stack>

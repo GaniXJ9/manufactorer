@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Box, ButtonBase, Typography } from "@mui/material";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import RenderNotificationIcon from "../../../shared/ui/render-notification-icon";
@@ -8,6 +9,7 @@ const NotificationItem = ({
   handleNotificationsClose,
   handleCloseDrawer,
 }) => {
+  const { t } = useTranslation();
   const unread = notification?.is_viewed === false;
   return (
     <ButtonBase
@@ -60,7 +62,7 @@ const NotificationItem = ({
             overflowWrap: "anywhere",
           }}
         >
-          {notification?.theme || "Уведомление"}
+          {notification?.theme || t("notifications.item")}
         </Typography>
         <Typography
           component="span"
@@ -89,7 +91,7 @@ const NotificationItem = ({
               color: "primary.main",
             }}
           >
-            Новое
+            {t("notifications.new")}
           </Typography>
         )}
       </Box>

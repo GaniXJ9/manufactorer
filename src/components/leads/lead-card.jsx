@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Typography, Box, Stack } from "@mui/material";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
@@ -5,6 +6,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useNavigate } from "react-router-dom";
 
 const LeadCard = ({ lead }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const navigateToLeadItem = () => {
@@ -43,7 +45,7 @@ const LeadCard = ({ lead }) => {
               fontSize: 20,
             }}
           >
-            Заказчик: {lead?.customer?.fullName || lead?.customer?.name || "Не указан"}
+            {t("common.customerLabel")}{" "}{lead?.customer?.fullName || lead?.customer?.name || t("common.notSpecifiedMale")}
           </Typography>
 
           <Stack
@@ -89,7 +91,7 @@ const LeadCard = ({ lead }) => {
                   fontSize: 12,
                 }}
               >
-                Откуда
+                {t("lead.from")}
               </Typography>
             </Box>
 
@@ -100,7 +102,7 @@ const LeadCard = ({ lead }) => {
                 lineHeight: 1.35,
               }}
             >
-              {lead?.from_location?.address || lead?.from || "Не указан"}
+              {lead?.from_location?.address || lead?.from || t("common.notSpecifiedMale")}
             </Typography>
           </Box>
 
@@ -125,7 +127,7 @@ const LeadCard = ({ lead }) => {
                   fontSize: 12,
                 }}
               >
-                Куда
+                {t("lead.to")}
               </Typography>
             </Box>
 
@@ -135,7 +137,7 @@ const LeadCard = ({ lead }) => {
                 lineHeight: 1.35,
               }}
             >
-              {lead?.to_location?.address || lead?.to || "Не указан"}
+              {lead?.to_location?.address || lead?.to || t("common.notSpecifiedMale")}
             </Typography>
           </Box>
         </Box>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, Box, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
@@ -10,32 +11,32 @@ import ProfileAvatar from "../../components/profile/profile-avatar";
 
 const sections = [
   {
-    title: "Компания и банковские реквизиты",
+    title: "profile.companySection",
     fields: [
-      { name: "company_name", label: "Название компании", autoComplete: "organization" },
-      { name: "bin", label: "БИН", numeric: true },
-      { name: "company_account", label: "Расчётный счёт (IBAN)" },
-      { name: "company_bik", label: "БИК банка" },
-      { name: "bank_name", label: "Название банка" },
-      { name: "company_address", label: "Адрес компании", autoComplete: "street-address" },
+      { name: "company_name", label: "profile.companyName", autoComplete: "organization" },
+      { name: "bin", label: "common.bin", numeric: true },
+      { name: "company_account", label: "profile.iban" },
+      { name: "company_bik", label: "profile.bik" },
+      { name: "bank_name", label: "profile.bankName" },
+      { name: "company_address", label: "profile.companyAddress", autoComplete: "street-address" },
     ],
   },
   {
-    title: "Личные данные",
+    title: "profile.personalSection",
     fields: [
-      { name: "fio", label: "ФИО", autoComplete: "name" },
-      { name: "phone", label: "Телефон", type: "tel", autoComplete: "tel" },
-      { name: "email", label: "Электронная почта", type: "email", autoComplete: "email" },
-      { name: "iin", label: "ИИН", numeric: true },
+      { name: "fio", label: "profile.fullName", autoComplete: "name" },
+      { name: "phone", label: "profile.phone", type: "tel", autoComplete: "tel" },
+      { name: "email", label: "profile.email", type: "email", autoComplete: "email" },
+      { name: "iin", label: "profile.iin", numeric: true },
     ],
   },
   {
-    title: "Документ, удостоверяющий личность",
+    title: "profile.identitySection",
     fields: [
-      { name: "document_number", label: "Номер документа" },
-      { name: "issue_country", label: "Страна выдачи" },
-      { name: "document_issue_date", label: "Дата выдачи", type: "date" },
-      { name: "document_issued_by", label: "Кем выдан" },
+      { name: "document_number", label: "profile.documentNumber" },
+      { name: "issue_country", label: "profile.issueCountry" },
+      { name: "document_issue_date", label: "profile.issueDate", type: "date" },
+      { name: "document_issued_by", label: "profile.issuedBy" },
     ],
   },
 ];
@@ -44,6 +45,7 @@ const fields = sections.flatMap((section) => section.fields);
 const defaultValues = Object.fromEntries(fields.map(({ name }) => [name, ""]));
 
 const Profile = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [saveError, setSaveError] = useState("");
@@ -70,7 +72,7 @@ const Profile = () => {
         setAvatar(data.avatar || "");
       } catch (error) {
         if (controller.signal.aborted) return;
-        setLoadError(error.response?.data?.message || error.message || "Не удалось загрузить профиль");
+        setLoadError(error.response?.data?.message || error.message || "profile.loadError");
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -120,7 +122,7 @@ const Profile = () => {
       setSaved(true);
     } catch (error) {
       if (controller.signal.aborted) return;
-      setSaveError(error.response?.data?.message || error.message || "Не удалось сохранить профиль");
+      setSaveError(error.response?.data?.message || error.message || "profile.saveError");
     } finally {
       saveController.current = null;
     }
@@ -128,14 +130,14 @@ const Profile = () => {
 
   return (
     <RootLayout>
-      <PageHeading title="Профиль" subtitle="Данные компании и контактного лица" />
-      {loading && <CircularProgress aria-label="Загрузка профиля" />}
+      <PageHeading title={t("nav.profile")} subtitle={t("profile.subtitle")} />
+      {loading && <CircularProgress aria-label={t("profile.loading")} />}
       {!loading && loadError && (
         <Alert
           severity="error"
-          action={<Button color="inherit" onClick={() => setRetryKey((value) => value + 1)}>Повторить</Button>}
+          action={<Button color="inherit" onClick={() => setRetryKey((value) => value + 1)}>{t("common.retry")}</Button>}
         >
-          {loadError}
+          {t(loadError)}
         </Alert>
       )}
       {!loading && !loadError && (
@@ -146,26 +148,26 @@ const Profile = () => {
               <Stack spacing={4}>
                 {sections.map(({ title, fields: sectionFields }, sectionIndex) => (
                   <Stack component="section" spacing={3} key={title} aria-labelledby={`profile-section-${sectionIndex}`}>
-                    <Typography component="h2" variant="h6" id={`profile-section-${sectionIndex}`}>{title}</Typography>
+                    <Typography component="h2" variant="h6" id={`profile-section-${sectionIndex}`}>{t(title)}</Typography>
                     {sectionFields.map(({ name, label, numeric, ...props }) => (
                       <FormControllerInput
                         key={name}
                         name={name}
-                        label={label}
+                        label={t(label)}
                         control={control}
                         fullWidth
-                        rules={numeric ? { pattern: { value: /^\d{12}$/, message: "Введите 12 цифр" } } : undefined}
+                        rules={numeric ? { pattern: { value: /^\d{12}$/, message: "profile.twelveDigits" } } : undefined}
                         slotProps={numeric ? { htmlInput: { inputMode: "numeric", maxLength: 12 } } : undefined}
                         {...props}
                       />
                     ))}
                   </Stack>
                 ))}
-                {saveError && <Alert severity="error">{saveError}</Alert>}
-                {saved && <Alert severity="success">Профиль успешно сохранён</Alert>}
+                {saveError && <Alert severity="error">{t(saveError)}</Alert>}
+                {saved && <Alert severity="success">{t("profile.saved")}</Alert>}
                 <PrimaryButton
                   type="submit"
-                  text={isSubmitting ? "Сохранение…" : "Сохранить изменения"}
+                  text={isSubmitting ? t("profile.saving") : t("profile.save")}
                   isLoading={isSubmitting}
                   disabled={(!isDirty && avatarDraft === undefined) || avatarBusy}
                   sx={{ alignSelf: "flex-start" }}

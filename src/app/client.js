@@ -21,7 +21,7 @@ async function waitForNonce(signal) {
 
     if (Date.now() >= deadline) {
       throw new Error(
-        "Не удалось дождаться APP_DATA.nonce. Обновите страницу.",
+        "errors.session",
       );
     }
 

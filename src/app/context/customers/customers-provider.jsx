@@ -27,7 +27,7 @@ export const CustomersProvider = ({ children }) => {
 
       setCustomers([]);
       setError(
-        error.response?.data?.message || "Не удалось загрузить заказчиков",
+        error.response?.data?.message || "errors.customers",
       );
     } finally {
       if (!signal?.aborted && version === customersVersion.current) setLoading(false);
@@ -44,7 +44,7 @@ export const CustomersProvider = ({ children }) => {
       setRequests(data.items);
     } catch (error) {
       if (signal?.aborted || version !== requestsVersion.current) return;
-      setRequestsError(error.response?.data?.message || "Не удалось загрузить заявки на связь");
+      setRequestsError(error.response?.data?.message || "errors.requests");
     } finally {
       if (!signal?.aborted && version === requestsVersion.current) setRequestsLoading(false);
     }

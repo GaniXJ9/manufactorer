@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Box, Typography } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-const EmptyInfo = ({ label = "Данные", subLabel = "Доп Информация" }) => (
-  <Box
+const EmptyInfo = ({ label, subLabel }) => {
+  const { t } = useTranslation();
+  return (<Box
     sx={{
       border: "1px solid",
       borderColor: "divider",
@@ -28,13 +30,13 @@ const EmptyInfo = ({ label = "Данные", subLabel = "Доп Информац
     />
 
     <Typography variant="body1" fontWeight={500}>
-      {label}
+      {label ?? t("common.data")}
     </Typography>
 
     <Typography variant="body2" color="text.disabled">
-      {subLabel}
+      {subLabel ?? t("common.additionalInfo")}
     </Typography>
-  </Box>
-);
+  </Box>);
+};
 
 export default EmptyInfo;

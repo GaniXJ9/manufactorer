@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Chip } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { WAYPOINT_TYPES } from "../../shared/const/status";
@@ -36,11 +37,12 @@ const RenderChip = ({ label, color = "primary", variant, size = "medium" }) => {
 };
 
 const RenderType = ({ type, size }) => {
+  const { t } = useTranslation();
   switch (type) {
     case WAYPOINT_TYPES.loading:
       return (
         <RenderChip
-          label={"Точка для погрузки"}
+          label={t("lead.loadingPoint")}
           variant="outlined"
           color="primary"
           size={size}
@@ -49,7 +51,7 @@ const RenderType = ({ type, size }) => {
     case WAYPOINT_TYPES.unloading:
       return (
         <RenderChip
-          label={"Точка для разгрузки"}
+          label={t("lead.unloadingPoint")}
           variant="outlined"
           color="primary"
           size={size}
@@ -59,7 +61,7 @@ const RenderType = ({ type, size }) => {
     default:
       return (
         <RenderChip
-          label={"Промежуточная"}
+          label={t("lead.intermediate")}
           variant="outlined"
           color="primary"
           size={size}

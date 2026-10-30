@@ -16,49 +16,49 @@ export const router = createBrowserRouter(
         // </AuthGuard>
       ),
       handle: {
-        breadcrumb: "Главная",
-        title: "Главная",
+        breadcrumb: "nav.home",
+        title: "nav.home",
       },
       children: [
         {
           path: "/profile",
           element: <Profile />,
           handle: {
-            breadcrumb: "Профиль",
-            title: "Профиль",
+            breadcrumb: "nav.profile",
+            title: "nav.profile",
           },
         },
         {
           path: "/",
           element: <Main />,
           handle: {
-            breadcrumb: "Главная",
-            title: "Главная",
+            breadcrumb: "nav.home",
+            title: "nav.home",
           },
         },
         {
           path: "/leads",
           element: <Leads />,
           handle: {
-            breadcrumb: "Перевозки",
-            title: "Перевозки",
+            breadcrumb: "nav.leads",
+            title: "nav.leads",
           },
         },
         {
           path: "/leads/:id",
           element: <LeadDetails />,
           handle: {
-            breadcrumb: "Перевозка",
-            breadcrumbParents: [{ to: "/leads", label: "Перевозки" }],
-            title: "Перевозки",
+            breadcrumb: "nav.lead",
+            breadcrumbParents: [{ to: "/leads", label: "nav.leads" }],
+            title: "nav.leads",
           },
         },
         {
           path: "/distributors",
           element: <Distributors />,
           handle: {
-            breadcrumb: "Грузовладельцы и дистрибьюторы",
-            title: "Грузовладельцы и дистрибьюторы",
+            breadcrumb: "nav.partners",
+            title: "nav.partners",
           },
         },
       ],

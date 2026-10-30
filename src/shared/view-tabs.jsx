@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import ViewListRoundedIcon from "@mui/icons-material/ViewListRounded";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
@@ -5,6 +6,7 @@ import ActionTooltip from "./action-tooltip";
 import { VIEWS } from "./const/view";
 
 const ViewTabs = ({ view, setView, isLeadsEmpty, sx = {} }) => {
+  const { t } = useTranslation();
   const isCardsView = view === VIEWS.cards;
 
   return (
@@ -31,7 +33,7 @@ const ViewTabs = ({ view, setView, isLeadsEmpty, sx = {} }) => {
             }
           }}
           size="small"
-          aria-label="Переключение отображения экспедиторов"
+          aria-label={t("view.switch")}
           sx={{
             alignSelf: {
               xs: "stretch",
@@ -49,13 +51,13 @@ const ViewTabs = ({ view, setView, isLeadsEmpty, sx = {} }) => {
             },
           }}
         >
-          <ActionTooltip title="Показать таблицей">
-            <ToggleButton value={VIEWS.table} aria-label="Показать таблицей">
+          <ActionTooltip title={t("view.table")}>
+            <ToggleButton value={VIEWS.table} aria-label={t("view.table")}>
               <ViewListRoundedIcon fontSize="small" />
             </ToggleButton>
           </ActionTooltip>
 
-          <ToggleButton value={VIEWS.cards} aria-label="Показать карточками">
+          <ToggleButton value={VIEWS.cards} aria-label={t("view.cards")}>
             <GridViewRoundedIcon fontSize="small" />
           </ToggleButton>
         </ToggleButtonGroup>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import TooltipIconButton from "../../../shared/ui/tooltip-icon-button";
 import {
   Alert,
@@ -27,6 +28,7 @@ const NotificationPopup = ({
   selectedNotification,
   setSelectedNotification,
 }) => {
+  const { t } = useTranslation();
   const [currentLead, setCurrentLead] = useState(null);
   const {
     notificationDetails,
@@ -97,11 +99,11 @@ const NotificationPopup = ({
           overflowWrap: "anywhere",
         }}
       >
-        {selectedNotification?.theme || "Уведомление"}
+        {selectedNotification?.theme || t("notifications.item")}
       </DialogTitle>
       <TooltipIconButton
-        title="Закрыть уведомление"
-        aria-label="Закрыть уведомление"
+        title={t("notifications.closeItem")}
+        aria-label={t("notifications.closeItem")}
         onClick={handleClose}
         sx={{ position: "absolute", right: 12, top: 16 }}
       >
@@ -112,8 +114,7 @@ const NotificationPopup = ({
           <NotificationLoader />
         ) : error ? (
           <Alert severity="error">
-            Не удалось загрузить уведомление. Закройте окно и попробуйте ещё
-            раз.
+            {t("notifications.detailsError")}
           </Alert>
         ) : (
           <>
@@ -172,7 +173,7 @@ const NotificationPopup = ({
                     color: "font_color.heading",
                   }}
                 >
-                  Документы
+                  {t("notifications.documents")}
                 </Typography>
                 <Box
                   sx={{
@@ -209,7 +210,7 @@ const NotificationPopup = ({
           onClick={handleClose}
           sx={{ textTransform: "none", borderRadius: "16px" }}
         >
-          Закрыть
+          {t("common.close")}
         </Button>
         {!isNotificationDetailsLoading &&
           !error &&
@@ -223,7 +224,7 @@ const NotificationPopup = ({
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{ textTransform: "none", borderRadius: "16px" }}
             >
-              Перейти
+              {t("common.open")}
             </Button>
           )}
       </DialogActions>

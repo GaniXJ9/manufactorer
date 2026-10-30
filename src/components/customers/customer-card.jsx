@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Box, Button, Chip, Stack, Typography } from "@mui/material";
 import InfoItem from "../../shared/ui/info-item";
 
@@ -11,6 +12,7 @@ const CustomerCard = ({
   actionColor = "primary",
   children,
 }) => {
+  const { t } = useTranslation();
   const handleSetCustomerDetails = () => {
     setSelectedCustomer?.(customer);
   };
@@ -46,7 +48,7 @@ const CustomerCard = ({
             color="text.secondary"
             sx={{ mb: 0.75, display: "flex", alignItems: "center" }}
           >
-            Заказчик
+            {t("common.customer")}
           </Typography>
 
           <Typography
@@ -59,7 +61,7 @@ const CustomerCard = ({
               fontWeight: 500,
             }}
           >
-            {customer?.fullName || customer?.name || "Не указано"}
+            {customer?.fullName || customer?.name || t("common.notSpecified")}
           </Typography>
         </Stack>
 
@@ -79,11 +81,11 @@ const CustomerCard = ({
         }}
       >
         {customer?.bank_name && (
-          <InfoItem label="Банк" value={customer.bank_name} />
+          <InfoItem label={t("common.bank")} value={customer.bank_name} />
         )}
-        <InfoItem label="БИН" value={customer?.bin} />
+        <InfoItem label={t("common.bin")} value={customer?.bin} />
         {customer?.legal_address && (
-          <InfoItem label="Адрес заказчика" value={customer.legal_address} />
+          <InfoItem label={t("partners.address")} value={customer.legal_address} />
         )}
       </Box>
       {children}
@@ -97,7 +99,7 @@ const CustomerCard = ({
             onAction(customer);
           }}
         >
-          {actionLoading ? "Подождите…" : actionLabel}
+          {actionLoading ? t("common.wait") : actionLabel}
         </Button>
       )}
     </Box>

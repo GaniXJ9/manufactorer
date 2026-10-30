@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Link as RouterLink, useMatches, useNavigate } from "react-router-dom";
 
 export function AppBreadcrumbs({ currentTitle }) {
+  const { t } = useTranslation();
   const matches = useMatches();
   const navigate = useNavigate();
   const items = matches.flatMap((match) => [
@@ -15,7 +17,7 @@ export function AppBreadcrumbs({ currentTitle }) {
 
   return (
     <Breadcrumbs
-      aria-label="Хлебные крошки"
+      aria-label={t("nav.breadcrumbs")}
       separator="/"
       sx={{ mb: 4, color: "text.secondary", "& .MuiBreadcrumbs-ol": { rowGap: 1 } }}
     >
@@ -28,15 +30,15 @@ export function AppBreadcrumbs({ currentTitle }) {
         sx={{ display: "inline-flex", alignItems: "center", font: "inherit", verticalAlign: "middle", cursor: "pointer" }}
       >
         <ChevronLeftIcon sx={{ mr: 0.5 }} />
-        Назад
+        {t("nav.back")}
       </Link>
       {items.map((item, index) => index === items.length - 1 ? (
         <Typography key={item.to} color="text.secondary" aria-current="page">
-          {currentTitle || item.label}
+          {currentTitle || t(item.label)}
         </Typography>
       ) : (
         <Link key={item.to} component={RouterLink} to={item.to} underline="hover" color="primary">
-          {item.label}
+          {t(item.label)}
         </Link>
       ))}
     </Breadcrumbs>

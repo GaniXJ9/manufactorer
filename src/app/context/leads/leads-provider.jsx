@@ -25,7 +25,7 @@ export const LeadsProvider = ({ children }) => {
       if (signal?.aborted) return;
 
       setLeads([]);
-      setError(error.response?.data?.message || "Не удалось загрузить перевозки");
+      setError(error.response?.data?.message || "errors.leads");
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
@@ -44,7 +44,7 @@ export const LeadsProvider = ({ children }) => {
     } catch (error) {
       if (signal?.aborted) return;
 
-      setLeadError(error.response?.data?.message || "Не удалось загрузить перевозку");
+      setLeadError(error.response?.data?.message || "errors.lead");
     } finally {
       if (!signal?.aborted) setLeadLoading(false);
     }

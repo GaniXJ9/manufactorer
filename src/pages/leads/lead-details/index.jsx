@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import CargoCard from "../../../components/lead-details/cargo-card";
 import LeadMap from "../../../components/lead-details/lead-map";
 import { useParams } from "react-router-dom";
@@ -12,6 +13,7 @@ import Section from "../../../shared/ui/section";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 
 const LeadDetails = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { lead, leadLoading, leadError, fetchLead } = useLeadsContext();
 
@@ -24,7 +26,7 @@ const LeadDetails = () => {
   if (leadLoading || (!leadError && lead?.id !== id)) {
     return (
       <RootLayout>
-        <CircularProgress aria-label="Загрузка перевозки" />
+        <CircularProgress aria-label={t("leads.loadingDetails")} />
       </RootLayout>
     );
   }
@@ -32,13 +34,13 @@ const LeadDetails = () => {
   if (leadError) {
     return (
       <RootLayout>
-        <Alert severity="error">{leadError}</Alert>
+        <Alert severity="error">{t(leadError)}</Alert>
       </RootLayout>
     );
   }
 
   return (
-    <RootLayout breadcrumbTitle={`Перевозка #${lead.num || "—"}`}>
+    <RootLayout breadcrumbTitle={t("lead.number", { value: lead.num || "—" })}>
       <LeadHeading leadData={lead} />
 
       <LeadMap leadData={lead} />
@@ -48,7 +50,7 @@ const LeadDetails = () => {
       <LeadCustomerInfo leadData={lead} />
 
       <Section
-        title={`Груз`}
+        title={t("cargo.title")}
         icon={<LocalShippingOutlinedIcon color="primary" />}
       >
         <Box

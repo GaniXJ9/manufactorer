@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Alert, Box, LinearProgress } from "@mui/material";
 import {
@@ -43,6 +44,7 @@ function FitRoute({ positions }) {
 }
 
 function RouteMap({ points, coordinates }) {
+  const { t } = useTranslation();
   const [route, setRoute] = useState(null);
   const [error, setError] = useState("");
 
@@ -55,7 +57,7 @@ function RouteMap({ points, coordinates }) {
       .catch(() => {
         if (!cancelled)
           setError(
-            "Не удалось загрузить маршрут. На карте показаны точки перевозки.",
+            "map.routeError",
           );
       });
     return () => {
@@ -73,8 +75,8 @@ function RouteMap({ points, coordinates }) {
         my: 2,
       }}
     >
-      {!route && !error && <LinearProgress aria-label="Загрузка маршрута" />}
-      {error && <Alert severity="warning">{error}</Alert>}
+      {!route && !error && <LinearProgress aria-label={t("map.loading")} />}
+      {error && <Alert severity="warning">{t(error)}</Alert>}
       <MapContainer
         center={points[0].position}
         zoom={13}
@@ -99,6 +101,7 @@ function RouteMap({ points, coordinates }) {
 }
 
 export default function LeadMap({ leadData }) {
+  const { t } = useTranslation();
   const points = [
     { label: "A", position: getPosition(leadData?.from_location) },
     ...(leadData?.waypoints || []).map((point, index) => ({
@@ -111,7 +114,7 @@ export default function LeadMap({ leadData }) {
   if (points.some((point) => !point.position)) {
     return (
       <Alert severity="info" sx={{ my: 2 }}>
-        Для отображения маршрута нужны координаты всех точек перевозки.
+        {t("map.coordinatesRequired")}
       </Alert>
     );
   }

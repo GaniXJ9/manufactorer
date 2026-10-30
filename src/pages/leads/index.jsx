@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Alert, Box, Button, CircularProgress, Pagination, Stack } from "@mui/material";
 import RootLayout from "../../components/layout/root-layout";
 import { PageHeading } from "../../components/layout/page-heading";
@@ -10,6 +11,7 @@ import { VIEWS } from "../../shared/const/view";
 import LeadsTable from "../../components/leads/leads-table";
 
 const Leads = () => {
+  const { t } = useTranslation();
   const [view, setView] = useState(VIEWS.table);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({ date_from: "", date_to: "", customer_id: "" });
@@ -58,30 +60,30 @@ const Leads = () => {
   return (
     <RootLayout>
       <PageHeading
-        title="Перевозки"
-        subtitle="Управление заявками на перевозку"
+        title={t("nav.leads")}
+        subtitle={t("leads.subtitle")}
       />
 
       <Box component="form" onSubmit={applyFilters} sx={{ display: "flex", flexWrap: "wrap", gap: 2, my: 2 }}>
         <FormInput
-          label="Созданы с" type="date" size="small"
+          label={t("leads.createdFrom")} type="date" size="small"
           value={filters.date_from}
           onChange={(event) => setFilters({ ...filters, date_from: event.target.value })}
           slotProps={{ htmlInput: { max: filters.date_to || undefined } }}
         />
         <FormInput
-          label="Созданы по" type="date" size="small"
+          label={t("leads.createdTo")} type="date" size="small"
           value={filters.date_to}
           onChange={(event) => setFilters({ ...filters, date_to: event.target.value })}
           slotProps={{ htmlInput: { min: filters.date_from || undefined } }}
         />
         <FormInput
-          label="ID заказчика" size="small"
+          label={t("leads.customerId")} size="small"
           value={filters.customer_id}
           onChange={(event) => setFilters({ ...filters, customer_id: event.target.value })}
         />
-        <Button type="submit" variant="contained" disabled={loading}>Применить</Button>
-        <Button onClick={resetFilters} disabled={loading}>Сбросить</Button>
+        <Button type="submit" variant="contained" disabled={loading}>{t("leads.apply")}</Button>
+        <Button onClick={resetFilters} disabled={loading}>{t("leads.reset")}</Button>
       </Box>
 
       <Box
@@ -103,7 +105,7 @@ const Leads = () => {
         <ViewTabs view={view} setView={setView} />
         <FormInput
           size="small"
-          label="Поиск на странице"
+          label={t("leads.search")}
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
@@ -121,10 +123,10 @@ const Leads = () => {
       </Box>
 
       <Box sx={{ mt: 3, mx: "auto", width: { xs: "100%", sm: isCardView ? "60%" : "100%" } }}>
-        {loading && <CircularProgress aria-label="Загрузка перевозок" />}
-        {!loading && error && <Alert severity="error" action={<Button color="inherit" onClick={() => setParams({ ...params })}>Повторить</Button>}>{error}</Alert>}
+        {loading && <CircularProgress aria-label={t("leads.loading")} />}
+        {!loading && error && <Alert severity="error" action={<Button color="inherit" onClick={() => setParams({ ...params })}>{t("common.retry")}</Button>}>{t(error)}</Alert>}
         {!loading && !error && visibleLeads.length === 0 && (
-          <Alert severity="info">Список пуст</Alert>
+          <Alert severity="info">{t("common.empty")}</Alert>
         )}
         {!loading && !error && visibleLeads.length > 0 && isCardView && (
           <Stack spacing={2}>
@@ -145,7 +147,7 @@ const Leads = () => {
           color="primary"
           shape="rounded"
           size="medium"
-          aria-label="Страницы перевозок"
+          aria-label={t("leads.pages")}
           sx={{
             mx: "auto",
             mb: 2,

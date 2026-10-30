@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import { Box } from "@mui/material";
 import Section from "../../shared/ui/section";
@@ -5,24 +6,25 @@ import EmptyInfo from "../../shared/ui/empty-info";
 import InfoItem from "../../shared/ui/info-item";
 
 const LeadCustomerInfo = ({ leadData }) => {
+  const { t } = useTranslation();
   const customer = leadData?.customer;
 
   if (!customer?.name)
     return (
       <Section
-        title="Данные о заказчике"
+        title={t("lead.customerDetails")}
         icon={<BusinessOutlinedIcon color="primary" />}
       >
         <EmptyInfo
-          label="Заказчик не указан"
-          subLabel="Нельзя начать рейс без заказчика"
+          label={t("lead.noCustomer")}
+          subLabel={t("lead.customerRequired")}
         />
       </Section>
     );
 
   return (
     <Section
-      title="Данные о заказчике"
+      title={t("lead.customerDetails")}
       icon={<BusinessOutlinedIcon color="primary" />}
     >
       <Box
@@ -36,10 +38,10 @@ const LeadCustomerInfo = ({ leadData }) => {
           },
         }}
       >
-        <InfoItem label={"Имя"} value={customer.name} />
-        <InfoItem label={"Номер телефона"} value={customer.tel} />
-        <InfoItem label={"БИН"} value={customer.bin} />
-        <InfoItem label={"Контактное лицо"} value={customer.contact_person} />
+        <InfoItem label={t("common.name")} value={customer.name} />
+        <InfoItem label={t("common.phoneNumber")} value={customer.tel} />
+        <InfoItem label={t("common.bin")} value={customer.bin} />
+        <InfoItem label={t("common.contactPerson")} value={customer.contact_person} />
       </Box>
     </Section>
   );

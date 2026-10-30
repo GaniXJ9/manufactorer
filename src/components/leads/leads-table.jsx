@@ -1,10 +1,13 @@
+import { useTranslation } from "react-i18next";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import RenderStatus from "../../shared/ui/render-status";
+import { getDataGridLocale } from "../../i18n/data-grid";
 
 const LeadsTable = ({ leads }) => {
+  const { t, i18n } = useTranslation();
   const columns = [
     {
       field: "id",
@@ -24,7 +27,7 @@ const LeadsTable = ({ leads }) => {
     {
       field: "status",
       valueGetter: (_, row) => row.status,
-      headerName: "Статус",
+      headerName: t("leads.status"),
       width: 200,
       renderCell: ({ row }) => (
         <Box
@@ -38,10 +41,10 @@ const LeadsTable = ({ leads }) => {
         </Box>
       ),
     },
-    { field: "num", headerName: "Номер", width: 200 },
+    { field: "num", headerName: t("leads.number"), width: 200 },
     {
       field: "driver",
-      headerName: "Водитель",
+      headerName: t("leads.driver"),
       width: 200,
       valueGetter: (_, row) => row?.driver?.fio || "",
       renderCell: ({ row }) => {
@@ -50,7 +53,7 @@ const LeadsTable = ({ leads }) => {
     },
     {
       field: "customer",
-      headerName: "Заказчик",
+      headerName: t("common.customer"),
       width: 200,
       valueGetter: (_, row) => row?.customer?.fullName || row?.customer?.name || "",
       renderCell: ({ row }) => {
@@ -59,20 +62,20 @@ const LeadsTable = ({ leads }) => {
     },
     {
       field: "to_location",
-      headerName: "Куда",
+      headerName: t("lead.to"),
       width: 200,
       valueGetter: (_, row) => row?.to_location?.address || row?.to || "",
       renderCell: ({ row }) => (
-        <Box>{row?.to_location?.address || row?.to || "Не указан"}</Box>
+        <Box>{row?.to_location?.address || row?.to || t("common.notSpecifiedMale")}</Box>
       ),
     },
     {
       field: "from_location",
-      headerName: "Откуда",
+      headerName: t("lead.from"),
       width: 200,
       valueGetter: (_, row) => row?.from_location?.address || row?.from || "",
       renderCell: ({ row }) => (
-        <Box>{row?.from_location?.address || row?.from || "Не указан"}</Box>
+        <Box>{row?.from_location?.address || row?.from || t("common.notSpecifiedMale")}</Box>
       ),
     },
   ];
@@ -102,9 +105,7 @@ const LeadsTable = ({ leads }) => {
             borderLeftColor: "warning.main",
           },
         }}
-        localeText={{
-          noRowsLabel: "Список перевозок пуст",
-        }}
+        localeText={getDataGridLocale(t, i18n.resolvedLanguage)}
       />
     </Paper>
   );
