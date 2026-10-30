@@ -1,0 +1,148 @@
+import TooltipIconButton from "../../../shared/ui/tooltip-icon-button";
+import {
+  Alert,
+  Box,
+  Button,
+  Drawer,
+  Pagination,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
+import { useNotificationsContext } from "../../../app/context/notifications/use-notifications-context";
+import NotificationItem from "./notification-item";
+import NotificationState from "./notification-state";
+
+const NotificationsDrawer = ({
+  openNotificationsDrawer,
+  handleCloseDrawer,
+  setSelectedNotification,
+  handleNotificationsClose,
+}) => {
+  const [page, setPage] = useState(1);
+  const {
+    total,
+    perPage,
+    notifications,
+    getNotifications,
+    isLoading,
+    markAllAsRead,
+    error,
+  } = useNotificationsContext();
+  const pageCount = Math.ceil(total / Math.max(perPage, 1));
+
+  useEffect(() => {
+    if (openNotificationsDrawer) getNotifications({ page });
+  }, [page, openNotificationsDrawer, getNotifications]);
+
+  const handleReadAll = async () => {
+    const success = await markAllAsRead();
+    if (success)
+      await getNotifications({ page });
+  };
+
+  return (
+    <Drawer
+      anchor="right"
+      open={openNotificationsDrawer}
+      onClose={handleCloseDrawer}
+      slotProps={{
+        paper: {
+          sx: {
+            width: { xs: "100%", sm: 460 },
+            maxWidth: "100%",
+            borderRadius: 0,
+            bgcolor: "background.default",
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          p: 3,
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 1,
+          }}
+        >
+          <Typography
+            sx={{ fontSize: 22, fontWeight: 600, color: "font_color.heading" }}
+          >
+            Уведомления
+          </Typography>
+          <TooltipIconButton
+            title="Закрыть уведомления"
+            aria-label="Закрыть уведомления"
+            onClick={handleCloseDrawer}
+          >
+            <CloseRoundedIcon />
+          </TooltipIconButton>
+        </Box>
+        <Typography sx={{ mt: 0.5, fontSize: 13, color: "text.secondary" }}>
+          Все события по вашим перевозкам и аукционам
+        </Typography>
+        <Button
+          onClick={handleReadAll}
+          disabled={isLoading || !total}
+          startIcon={<DoneAllRoundedIcon />}
+          sx={{ mt: 2, textTransform: "none", borderRadius: "16px" }}
+        >
+          Отметить все прочитанными
+        </Button>
+      </Box>
+      <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+        {error ? (
+          <Alert severity="error" sx={{ m: 2 }}>
+            Не удалось выполнить действие. Попробуйте ещё раз.
+          </Alert>
+        ) : isLoading || !notifications.length ? (
+          <NotificationState loading={isLoading} />
+        ) : (
+          <Box sx={{ p: 2, display: "grid", gap: 1.5 }}>
+            {notifications.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                setSelectedNotification={setSelectedNotification}
+                handleNotificationsClose={handleNotificationsClose}
+                handleCloseDrawer={handleCloseDrawer}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+      {pageCount > 1 && (
+        <Box
+          sx={{
+            p: 2,
+            bgcolor: "background.paper",
+            borderTop: "1px solid",
+            borderColor: "divider",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Pagination
+            page={page}
+            count={pageCount}
+            disabled={isLoading}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+            shape="rounded"
+            siblingCount={0}
+          />
+        </Box>
+      )}
+    </Drawer>
+  );
+};
+export default NotificationsDrawer;

@@ -1,10 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import NotificationsBlock from "./notifications/notifications-block";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Alert,
   Avatar,
-  Badge,
   Box,
   Button,
   Dialog,
@@ -238,27 +237,7 @@ export function Header() {
           ml: "auto",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mx: { xs: 0, sm: 1 },
-            width: 40,
-            height: 40,
-            borderRadius: 2,
-            border: "1px solid",
-            borderColor: "divider",
-            color: "primary.main",
-            bgcolor: "background.paper",
-
-            "&:hover": { bgcolor: "background.main" },
-          }}
-        >
-          <Badge badgeContent={10} max={99} color="error">
-            <NotificationsNoneOutlinedIcon color="primary" />
-          </Badge>
-        </Box>
+        <NotificationsBlock />
 
         <Button
           variant="outlined"

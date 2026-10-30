@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const isStaging = window?.APP_DATA?.mode === "staging";
 
-const baseURL = "https://manufacturer.360logistics.kz/wp-json/";
+const baseURL = "https://manufacturer.360logistics.kz/wp-json";
 
 export const api = axios.create({
   baseURL,
@@ -20,7 +20,9 @@ async function waitForNonce(signal) {
     if (nonce) return nonce;
 
     if (Date.now() >= deadline) {
-      throw new Error("Не удалось дождаться APP_DATA.nonce. Обновите страницу.");
+      throw new Error(
+        "Не удалось дождаться APP_DATA.nonce. Обновите страницу.",
+      );
     }
 
     await new Promise((resolve) => setTimeout(resolve, 50));
