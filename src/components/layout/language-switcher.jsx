@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { MenuItem, Select } from "@mui/material";
-import { languages, normalizeLanguage } from "../../i18n/languages";
+import { getDirection, languages, normalizeLanguage } from "../../i18n/languages";
 
 export function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
       inputProps={{ "aria-label": t("language.select") }}
       MenuProps={{
         slotProps: {
-          paper: { sx: { mt: 1, minWidth: 160 } },
+          paper: { sx: { mt: 1, minWidth: 160, maxHeight: "min(640px, 80vh)" } },
           list: { "aria-label": t("language.list") },
         },
       }}
@@ -35,8 +35,8 @@ export function LanguageSwitcher() {
       }}
     >
       {languages.map(({ value, label }) => (
-        <MenuItem key={value} value={value} lang={value}>
-          {label}
+        <MenuItem key={value} value={value}>
+          <span lang={value} dir={getDirection(value)}>{label}</span>
         </MenuItem>
       ))}
     </Select>

@@ -8,27 +8,36 @@ import { NotificationsProvider } from "./app/context/notifications/notifications
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { createTheme } from "@mui/material/styles";
-import { enUS, ruRU, kkKZ } from "@mui/material/locale";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import { prefixer } from "stylis";
+import rtlPlugin from "@mui/stylis-plugin-rtl";
+import { getLayoutDirection } from "./i18n/languages";
+import { getMaterialLocale } from "./i18n/material";
 
-const materialLocales = { en: enUS, ru: ruRU, kk: kkKZ };
+const ltrCache = createCache({ key: "muiltr" });
+const rtlCache = createCache({ key: "muirtl", stylisPlugins: [prefixer, rtlPlugin] });
 
 function App() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const direction = getLayoutDirection(i18n.resolvedLanguage);
   const localizedTheme = useMemo(
-    () => createTheme(theme, materialLocales[i18n.resolvedLanguage] || ruRU),
-    [i18n.resolvedLanguage],
+    () => createTheme(theme, getMaterialLocale(t, i18n.resolvedLanguage), { direction }),
+    [t, i18n.resolvedLanguage, direction],
   );
   return (
-    <ThemeProvider theme={localizedTheme}>
-      <NotificationsProvider>
-        <CssBaseline />
-        <LeadsProvider>
-          <CustomersProvider>
-            <RouterProvider router={router} />
-          </CustomersProvider>
-        </LeadsProvider>
-      </NotificationsProvider>
-    </ThemeProvider>
+    <CacheProvider value={direction === "rtl" ? rtlCache : ltrCache}>
+      <ThemeProvider theme={localizedTheme}>
+        <NotificationsProvider>
+          <CssBaseline />
+          <LeadsProvider>
+            <CustomersProvider>
+              <RouterProvider router={router} />
+            </CustomersProvider>
+          </LeadsProvider>
+        </NotificationsProvider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 

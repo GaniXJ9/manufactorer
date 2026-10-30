@@ -326,5 +326,15 @@
     "columnMenuAriaLabel": "{{name}} бағанының мәзірі",
     "selectedRows": "Таңдалған жолдар: {{count}}",
     "visibleRows": "{{total}} ішінен {{visible}}"
+  },
+  "pagination": {
+    "first": "Бірінші бетке өту",
+    "last": "Соңғы бетке өту",
+    "next": "Келесі бетке өту",
+    "previous": "Алдыңғы бетке өту",
+    "page": "{{page}}-бетке өту",
+    "current": "{{page}}-бет",
+    "rowsPerPage": "Беттегі жолдар:",
+    "displayedRows": "{{count}} ішінен {{from}}–{{to}}"
   }
 }

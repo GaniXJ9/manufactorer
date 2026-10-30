@@ -29,7 +29,7 @@ export function AppBreadcrumbs({ currentTitle }) {
         onClick={() => navigate(window.history.state?.idx > 0 ? -1 : parentPath)}
         sx={{ display: "inline-flex", alignItems: "center", font: "inherit", verticalAlign: "middle", cursor: "pointer" }}
       >
-        <ChevronLeftIcon sx={{ mr: 0.5 }} />
+        <ChevronLeftIcon sx={(theme) => ({ mr: 0.5, transform: theme.direction === "rtl" ? "scaleX(-1)" : undefined })} />
         {t("nav.back")}
       </Link>
       {items.map((item, index) => index === items.length - 1 ? (

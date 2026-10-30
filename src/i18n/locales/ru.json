@@ -326,5 +326,15 @@
     "columnMenuAriaLabel": "Меню столбца {{name}}",
     "selectedRows": "Выбрано строк: {{count}}",
     "visibleRows": "{{visible}} из {{total}}"
+  },
+  "pagination": {
+    "first": "Перейти на первую страницу",
+    "last": "Перейти на последнюю страницу",
+    "next": "Перейти на следующую страницу",
+    "previous": "Перейти на предыдущую страницу",
+    "page": "Перейти на страницу {{page}}",
+    "current": "Страница {{page}}",
+    "rowsPerPage": "Строк на странице:",
+    "displayedRows": "{{from}}–{{to}} из {{count}}"
   }
 }
